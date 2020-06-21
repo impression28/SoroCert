@@ -212,3 +212,22 @@ Definition test_list :=
 (make_rod u_empty one) :: (make_rod five two) :: nil.
 
 Definition soroban := list rod.
+
+Fixpoint big_endian_succ_soroban (s : soroban) : soroban :=
+match s with
+| nil => nil
+| r :: t => match r with
+            | make_rod five four =>
+                (make_rod u_empty l_empty) :: (big_endian_succ_soroban t)
+            | make_rod f o =>
+                (make_rod (five_complement f) (succ_one_units o)) :: t
+            end
+end.
+
+Fixpoint soroban_to_nat (s : soroban) : nat :=
+match s with
+| nil => 0
+| r :: t => (rod_to_nat r) + 10*soroban_to_nat(t)
+end.
+
+Compute soroban_to_nat ((make_rod u_empty two) ::(make_rod five four) :: nil).
