@@ -99,10 +99,41 @@ apply one_units_to_nat_injective in HO.
 apply five_units_to_nat_injective in HF. rewrite HF. rewrite HO.
 reflexivity.
 Qed.
+Definition nat_to_one_unit (n : nat) : one_unit_beads :=
+match n with
+| 0 => l_empty
+| 1 => one
+| 2 => two
+| 3 => three
+| 4 => four
+| _ => l_empty
+end.
+
+Definition nat_to_rod (n: nat) : rod :=
+match 10 <=? n with
+| true => make_rod u_empty l_empty
+| false => match n <=? 4 with
+           | true => make_rod u_empty (nat_to_one_unit n)
+           | false => make_rod five (nat_to_one_unit (n-5))
+           end
+end.
+
+Theorem nat_to_rod_left_inverse : forall r,
+nat_to_rod (rod_to_nat r) = r.
+Proof.
+destruct r; destruct f; destruct o; reflexivity.
+Qed.
+
+Theorem nat_to_rod_right_inverse : forall n,
+n <= 9 -> rod_to_nat (nat_to_rod n) = n.
+Admitted.
 
 Theorem rod_to_nat_surjective : forall n, exists r,
 n <= 9 -> n = rod_to_nat r.
-Admitted.
+Proof.
+intros. exists (nat_to_rod n). intros. rewrite nat_to_rod_right_inverse.
+reflexivity. assumption.
+Qed.
 
 Definition unit_complement (o : one_unit_beads) : one_unit_beads :=
 match o with
