@@ -201,8 +201,14 @@ Theorem pred_one_units_cyclic : forall o,
 pred_one_units (sub_one_units o four) = o.
 Proof.
 destruct o; reflexivity.
-Qed. 
+Qed.
 
-Require Import Decimal.
+Definition greater_or_equal (r r' : rod) : bool :=
+rod_to_nat r <=? rod_to_nat r'.
 
-Search "Decimal".
+Require Import Coq.Lists.List.
+
+Definition test_list :=
+(make_rod u_empty one) :: (make_rod five two) :: nil.
+
+Definition soroban := list rod.
